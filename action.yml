@@ -1,0 +1,9 @@
+name: "QR Code Commenter"
+description: "Generate QR code for a link and comment in PR"
+inputs:
+  link:
+    description: "URL to convert to QR Code and post in PR"
+    required: true
+runs:
+  using: "node16"
+  main: "dist/index.js"
