@@ -1,8 +1,14 @@
 name: "QR Code Commenter"
 description: "Generate QR code for a link and comment in PR"
 inputs:
-  link:
-    description: "URL to convert to QR Code and post in PR"
+  links:
+    description: "Links to generate QR code for, separated by comma"
+    required: true
+  messages:
+    description: "Messages to post in PR, separated by comma"
+    required: true
+  github-token:
+    description: "GitHub token to use for posting comments"
     required: true
 runs:
   using: "node16"
