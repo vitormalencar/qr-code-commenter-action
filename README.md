@@ -1,116 +1,59 @@
-# Create a JavaScript Action
+# QR Code Commenter GitHub Action 📱
 
-<p align="center">
-  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
-</p>
+Generate QR codes from provided links and post them as comments in your pull requests.
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+<!-- ![Demo Image](path_to_a_demo_image.png) You might want to add a sample image showing a PR comment with QR codes -->
 
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+## Features
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+- Generate QR code images directly in PR comments.
+- Support for multiple QR codes in a single comment.
+- Customizable messages for each QR code to give context.
 
-## Create an action from this template
+## Prerequisites
 
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-Install the dependencies
-
-```bash
-npm install
-```
-
-Run the tests :heavy_check_mark:
-
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-...
-```
-
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-const core = require('@actions/core');
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Package for distribution
-
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run prepare
-
-```bash
-npm run prepare
-```
-
-Since the packaged index.js is run from the dist folder.
-
-```bash
-git add dist
-```
-
-## Create a release branch
-
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
-
-Checkin to the v1 release branch
-
-```bash
-git checkout -b v1
-git commit -a -m "v1 release"
-```
-
-```bash
-git push origin v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
+1. GitHub Token: To post comments in PRs, the action requires a GitHub token.
+2. Links: One or more links to generate QR codes for.
 
 ## Usage
 
-You can now consume the action by referencing the v1 branch
+1. First, set up a workflow (if you haven't already) in `.github/workflows`.
+
+2. Add the action to your workflow:
 
 ```yaml
-uses: actions/javascript-action@v1
-with:
-  milliseconds: 1000
+name: QR Code Commenter
+
+on:
+pull_request: # or any other event you prefer
+  types: [opened, synchronize]
+
+jobs:
+commentWithQR:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Comment PR with QR Code
+      uses: YOUR_USERNAME/QR-Code-Commenter-Action@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        links: "link1,link2,link3"
+        messages: "Message for Link 1, Message for Link 2, Message for Link 3"
 ```
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+Replace YOUR_USERNAME with your GitHub username and QR-Code-Commenter-Action with the name of your repository.
+
+## Inputs
+
+| Input          | Description                                                      | Required | Default |
+| -------------- | ---------------------------------------------------------------- | -------- | ------- |
+| `github_token` | GitHub token to post comments in PRs                             | Yes      | N/A     |
+| `links`        | Comma-separated list of links to generate QR codes for           | Yes      | N/A     |
+| `messages`     | Comma-separated list of messages to give context to each QR code | No       | N/A     |
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+made with ❤️ by Vitor Alencar
