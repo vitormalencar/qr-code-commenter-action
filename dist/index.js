@@ -17,8 +17,8 @@ async function run() {
       throw new Error("Number of links should match the number of messages.");
     }
 
-    const token = core.getInput("github_token", { required: true });
-    const octokit = new github.getOctokit(token); // Note the change here
+    const token = core.getInput("github-token", { required: true });
+    const octokit = new github.getOctokit(token);
     const context = github.context;
 
     let commentBody = "## 📱 QR Codes for Deploy Preview\n\n";
@@ -43,13 +43,13 @@ async function run() {
     console.log("QR Codes commented in PR successfully");
   } catch (error) {
     core.setFailed(error.message);
-    return error.message; // Return the error message
+    return error.message;
   }
 }
 
 run();
 
-module.exports = run; // Exporting for testability
+module.exports = run;
 
 
 /***/ }),

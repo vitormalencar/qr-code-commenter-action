@@ -38,7 +38,7 @@ commentWithQR:
     - name: Comment PR with QR Code
       uses: YOUR_USERNAME/QR-Code-Commenter-Action@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         links: "link1,link2,link3"
         messages: "Message for Link 1, Message for Link 2, Message for Link 3"
 ```
