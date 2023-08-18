@@ -26,7 +26,9 @@ async function run() {
 
       commentBody += `${message}\n\n![QR Code](${qrCodeDataURL})\n\n`;
     }
-
+    if (context.payload.pull_request == null) {
+      throw new Error("No pull request found.");
+    }
     // Comment in PR
     await octokit.issues.createComment({
       ...context.repo,
