@@ -1,0 +1,15 @@
+name: Test QR Code Commenter
+
+on:
+  pull_request
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post QR Code Comment
+        uses: vitormalencar/qr-code-commenter-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          links: "https://example.com"
+          messages: "Here is a QR Code for you!"
