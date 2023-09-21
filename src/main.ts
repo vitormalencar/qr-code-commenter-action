@@ -1,6 +1,5 @@
-import core from '@actions/core'
-import github from '@actions/github'
-import QRCode from 'qrcode'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 
 export async function run() {
   try {
@@ -16,25 +15,39 @@ export async function run() {
     const octokit = github.getOctokit(token)
     const context = github.context
 
-    let commentBody = '## 📱 QR Codes for Deploy Preview\n\n'
+    const header = '## 📱 QR Codes for Deploy Preview';
+    const footer = 'DRI @ua_eng_app';
+    let commentBody = `${header}\n\n`
 
     for (let i = 0; i < linksInput.length; i++) {
       const link = linksInput[i].trim()
       const message = messagesInput[i].trim()
 
-      // Generate QR Code
-      const qrCodeDataURL = await QRCode.toDataURL(link)
-
-      commentBody += `${message}\n\n![QR Code](${qrCodeDataURL})\n\n`
+      commentBody += `${message}\n\n![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(
+        link
+      )})\n${footer}\n\n`
     }
     if (context.payload.pull_request == null) {
       throw new Error('No pull request found.')
     }
-    // Comment in PR
-    await octokit.rest.issues.createComment({
+
+    const {data: pullRequest} = await octokit.rest.pulls.get({
       ...context.repo,
-      issue_number: context.payload.pull_request.number,
-      body: commentBody
+      pull_number: context.payload.pull_request.number
+    })
+
+    let prBody = pullRequest.body || "";
+    if (prBody.includes(header)) {
+      prBody = prBody.substring(0, prBody.indexOf(header)) + prBody.substring(prBody.indexOf(footer) + footer.length)
+    } 
+
+    prBody += `\n\n${commentBody}`
+
+    // Update PR description
+    await octokit.rest.pulls.update({
+      ...context.repo,
+      pull_number: context.payload.pull_request.number,
+      body: prBody
     })
 
     console.log('QR Codes commented in PR successfully')

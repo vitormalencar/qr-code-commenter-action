@@ -8,7 +8,7 @@ jest.mock('@actions/github')
 jest.mock('qrcode')
 
 const mockedCore = core as jest.Mocked<typeof core>
-const mockedGithub = github as jest.Mocked<typeof github>;
+const mockedGithub = github as jest.Mocked<typeof github>
 
 describe('QR Code Commenter Action', () => {
   afterEach(() => {
